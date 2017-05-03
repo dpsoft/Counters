@@ -3,10 +3,46 @@ package minmaxcounters
 
 
 import java.lang.Math.abs
-import java.util.concurrent.Executors
-import java.util.concurrent.atomic.AtomicLong
+import java.util.concurrent.atomic.{AtomicLong, LongAdder}
 
 import org.HdrHistogram.WriterReaderPhaser
+import org.jctools.counters.Counter
+
+
+class LongAdderWithPhaser extends Counter {
+  val recordingPhaser = new WriterReaderPhaser
+
+  @volatile var activeAdder:LongAdder = new LongAdder
+  var inactiveAdder:LongAdder = new LongAdder
+
+  def increment:Unit = withCriticalSection(activeAdder.increment())
+
+  def withCriticalSection[A](thunk: => A):A = {
+    val criticalValueAtEnter = recordingPhaser.writerCriticalSectionEnter()
+    try thunk finally recordingPhaser.writerCriticalSectionExit(criticalValueAtEnter)
+  }
+
+  def withReaderLock[A](thunk: => A):A = {
+    recordingPhaser.readerLock()
+    try {
+      val value = thunk
+      recordingPhaser.flipPhase(500000L /* yield in 0.5 msec units if needed */)
+      value
+    } finally recordingPhaser.readerUnlock()
+  }
+
+  def get():Long =  withReaderLock {
+    inactiveAdder.reset()
+    val tempValues = inactiveAdder
+    inactiveAdder = activeAdder
+    activeAdder = tempValues
+    inactiveAdder.sum()
+  }
+
+  override def increment(delta: Long): Unit = ???
+
+  override def getAndReset(): Long = ???
+}
 
 class LongMaxUpdaterWithPhaser {
   val recordingPhaser = new WriterReaderPhaser
