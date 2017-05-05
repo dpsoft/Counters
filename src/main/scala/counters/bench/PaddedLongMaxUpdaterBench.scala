@@ -1,6 +1,7 @@
 package counters.bench
 
 import java.util.concurrent.TimeUnit
+import java.util.concurrent.atomic.AtomicLong
 
 import org.openjdk.jmh.annotations._
 import updaters.MaxUpdater
@@ -11,9 +12,9 @@ import updaters.MaxUpdater
 @Fork(value = 2, jvmArgsAppend = Array("-XX:-RestrictContended"))
 @Warmup(iterations = 10)
 @Measurement(iterations = 10)
-class LongMaxUpdaterBench {
+class PaddedLongMaxUpdaterBench {
 
-  val updater: MaxUpdater = minmaxcounters.LongMaxUpdater()
+  val updater: MaxUpdater = new minmaxcounters.PaddedLongMaxUpdater(new AtomicLong(Long.MinValue))
 
   val values:Array[Long] = Array(
     720, 190, 1320, 663, 520, 3646, 653, 1691, 201, 2959, 183, 2534, 632, 565, 2844,

@@ -1,9 +1,8 @@
 package minmaxcounters
 
-import java.util.concurrent.atomic.{AtomicLong, LongAdder}
+import java.util.concurrent.atomic.AtomicLong
 
-import org.jctools.util.JvmInfo
-import updaters.{FixedStripedLongMaxUpdater, MaxUpdater}
+import updaters.MaxUpdater
 
 import scala.annotation.tailrec
 
@@ -19,10 +18,8 @@ class LongMaxUpdater(value:AtomicLong) extends MaxUpdater{
     compare()
   }
 
-  def max():Long = value.get()
-  def set(newValue:Long):Long = value.getAndSet(newValue)
-
-  override def maxAndReset(): Long = ???
+  override def max:Long = value.get()
+  override def maxAndReset(): Long = value.getAndSet(0L)
 }
 
 
@@ -30,9 +27,15 @@ object LongMaxUpdater {
   def apply(): LongMaxUpdater = new LongMaxUpdater(new AtomicLong(Long.MinValue))
 }
 
+class PaddedLongMaxUpdater(value:AtomicLong) extends LongMaxUpdater(value) {
+  @volatile var p1, p2, p3, p4, p5, p6 = 7L
 
-//object Test extends App {
-////  val updater = LongMaxUpdater()
+  protected def sumPaddingToPreventOptimisation() = p1 + p2 + p3 + p4 + p5 + p6
+}
+
+
+object Test extends App {
+//  val updater = LongMaxUpdater()
 //  val updater = new FixedStripedLongMaxUpdater(JvmInfo.CPUs)
 //
 //  updater.update(1L)
@@ -46,10 +49,10 @@ object LongMaxUpdater {
 //  updater.update(104L)
 //  updater.update(102L)
 //  updater.update(101L)
-//  updater.update(100L)
+//  updater.update(10000L)
 //  updater.update(1)
-//
+
 //  println(updater.max())
 //  println(updater.maxAndReset())
 //  println(updater.max())
-//}
+}
