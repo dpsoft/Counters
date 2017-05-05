@@ -1,21 +1,20 @@
 package counters.bench
 
 import java.util.concurrent.TimeUnit
-import java.util.concurrent.atomic.AtomicLong
 
-import counters.adder.{AtomicLongCounter, PaddedLongCounter}
+import counters.adder.LongAdderCounter
 import org.jctools.counters.Counter
 import org.openjdk.jmh.annotations._
 
 @State(Scope.Group)
 @BenchmarkMode(Array(Mode.AverageTime))
 @OutputTimeUnit(TimeUnit.NANOSECONDS)
-@Fork(2)
+@Fork(value = 2, jvmArgsAppend = Array("-XX:-RestrictContended"))
 @Warmup(iterations = 10)
 @Measurement(iterations = 10)
-class PaddedAtomicLongBench {
+class LongAdderCounterBench {
 
-  val counter: Counter = new PaddedLongCounter(new AtomicLong(0L))
+  val counter: Counter = new LongAdderCounter
 
   @Benchmark
   @Group("rw")

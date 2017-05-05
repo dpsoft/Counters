@@ -2,19 +2,20 @@ package counters.bench
 
 import java.util.concurrent.TimeUnit
 
-import minmaxcounters.LongAdderWithPhaser
+import counters.striped.FixedSizeStripedLongCounterV8
 import org.jctools.counters.Counter
+import org.jctools.util.JvmInfo
 import org.openjdk.jmh.annotations._
 
 @State(Scope.Group)
 @BenchmarkMode(Array(Mode.AverageTime))
 @OutputTimeUnit(TimeUnit.NANOSECONDS)
-@Fork(value = 2, jvmArgsAppend = Array("-XX:-RestrictContended"))
+@Fork(2)
 @Warmup(iterations = 10)
 @Measurement(iterations = 10)
-class LongAdderWithPhaserBench {
+class FixedStripedCounterBench {
 
-  val counter: Counter = new LongAdderWithPhaser()
+  val counter: Counter = new FixedSizeStripedLongCounterV8(JvmInfo.CPUs)
 
   @Benchmark
   @Group("rw")

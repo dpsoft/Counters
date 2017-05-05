@@ -1,10 +1,10 @@
 package counters.bench
 
 import java.util.concurrent.TimeUnit
+import java.util.concurrent.atomic.AtomicLong
 
-import counters.striped.FixedSizeStripedLongCounterV8
+import counters.adder.PaddedLongCounter
 import org.jctools.counters.Counter
-import org.jctools.util.JvmInfo
 import org.openjdk.jmh.annotations._
 
 @State(Scope.Group)
@@ -13,9 +13,9 @@ import org.openjdk.jmh.annotations._
 @Fork(2)
 @Warmup(iterations = 10)
 @Measurement(iterations = 10)
-class FixedStripedBench {
+class PaddedAtomicLongCounterBench {
 
-  val counter: Counter = new FixedSizeStripedLongCounterV8(JvmInfo.CPUs)
+  val counter: Counter = new PaddedLongCounter(new AtomicLong(0L))
 
   @Benchmark
   @Group("rw")

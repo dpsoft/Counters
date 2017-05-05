@@ -2,7 +2,7 @@ package counters.bench
 
 import java.util.concurrent.TimeUnit
 
-import counters.adder.LongAdderCounter
+import minmaxcounters.LongAdderWithPhaser
 import org.jctools.counters.Counter
 import org.openjdk.jmh.annotations._
 
@@ -12,9 +12,9 @@ import org.openjdk.jmh.annotations._
 @Fork(value = 2, jvmArgsAppend = Array("-XX:-RestrictContended"))
 @Warmup(iterations = 10)
 @Measurement(iterations = 10)
-class LongAdderBench {
+class LongAdderCounterWithPhaserBench {
 
-  val counter: Counter = new LongAdderCounter
+  val counter: Counter = new LongAdderWithPhaser()
 
   @Benchmark
   @Group("rw")
