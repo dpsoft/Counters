@@ -10,10 +10,8 @@ class LongMaxUpdater(value:AtomicLong) extends MaxUpdater{
   def update(newMax:Long):Unit = {
     @tailrec def compare():Long = {
       val currentMax = value.get()
-      if(newMax > currentMax){
-        if (!value.compareAndSet(currentMax, newMax)) compare()
-        else newMax
-      } else currentMax
+      if(newMax > currentMax)if (!value.compareAndSet(currentMax, newMax)) compare() else newMax
+       else currentMax
     }
     compare()
   }
