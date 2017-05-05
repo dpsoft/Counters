@@ -8,10 +8,7 @@ class LongAdderCounter extends Counter {
   val counter = new LongAdder()
 
   override def increment(): Unit = counter.increment()
-
   override def get(): Long = counter.sum()
-
-  override def increment(delta: Long): Unit = ???
-
-  override def getAndReset(): Long = ???
+  override def increment(delta: Long): Unit = counter.add(delta)
+  override def getAndReset(): Long = getAndReset()
 }
