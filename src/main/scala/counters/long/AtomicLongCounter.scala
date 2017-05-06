@@ -18,3 +18,5 @@ class PaddedLongCounter(value:AtomicLong) extends AtomicLongCounter {
   @volatile var p1, p2, p3, p4, p5, p6 = 7L
   protected def sumPaddingToPreventOptimisation() = p1 + p2 + p3 + p4 + p5 + p6
 }
+
+
