@@ -2,6 +2,7 @@ package minmaxcounters
 
 import java.util.concurrent.atomic.AtomicLong
 
+import atomic.LeftRight256PaddedLong
 import updaters.MaxUpdater
 
 import scala.annotation.tailrec
@@ -32,31 +33,31 @@ class PaddedLongMaxUpdater(value:AtomicLong) extends LongMaxUpdater(value) {
 }
 
 
-abstract class PrePad {
-  private var l01, l02, l03, l04, l05, l06, l07, l08 = 8L
-  private var l9, l10, l11, l12, l13, l14, l15 = 7L
-}
+//abstract class PrePad {
+//  private var l01, l02, l03, l04, l05, l06, l07, l08 = 8L
+//  private var l9, l10, l11, l12, l13, l14, l15 = 7L
+//}
 
-abstract class AbstractPadded256LongMaxUpdater(value:AtomicLong) extends PrePad with MaxUpdater{
+class Padded256LongMaxUpdater(initialValue:Long) extends LeftRight256PaddedLong(initialValue) with MaxUpdater{
 
   def update(newMax:Long):Unit = {
     @tailrec def compare():Long = {
-      val currentMax = value.get()
-      if(newMax > currentMax)if (!value.compareAndSet(currentMax, newMax)) compare() else newMax
+      val currentMax = volatileGet()
+      if(newMax > currentMax)if (!compareAndSet(currentMax, newMax)) compare() else newMax
       else currentMax
     }
     compare()
   }
 
-  override def max:Long = value.get()
-  override def maxAndReset(): Long = value.getAndSet(0L)
+  override def max:Long = volatileGet()
+  override def maxAndReset(): Long = getAndSet(0L)
 }
-
-class Padded256LongMaxUpdater(value:AtomicLong) extends AbstractPadded256LongMaxUpdater(value) {
-  var l02, l03, l04, l05, l06, l07, l08 = 8L
-  var l9, l10, l11, l12, l13, l14, l15, l16 = 8L
-
-}
+//
+//class Padded256LongMaxUpdater(value:AtomicLong) extends AbstractPadded256LongMaxUpdater(value) {
+//  var l02, l03, l04, l05, l06, l07, l08 = 8L
+//  var l9, l10, l11, l12, l13, l14, l15, l16 = 8L
+//
+//}
 
 object Test extends App {
 //  val updater = LongMaxUpdater()

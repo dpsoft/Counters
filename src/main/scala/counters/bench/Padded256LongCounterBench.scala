@@ -14,7 +14,7 @@ import org.openjdk.jmh.annotations._
 @Measurement(iterations = 10)
 class Padded256LongCounterBench {
 
-  val counter: Counter = new Padded256LongCounter
+  val counter: Counter = new Padded256LongCounter(Long.MinValue)
 
   @Benchmark
   @Group("rw")

@@ -24,7 +24,7 @@ abstract class LeftRightLongPadded extends PrePad {
         }
     }
 
-    LeftRightLongPadded(long initialValue) {
+    public LeftRightLongPadded(long initialValue) {
         this.value = initialValue;
     }
 
@@ -53,11 +53,11 @@ abstract class LeftRightLongPadded extends PrePad {
     }
 }
 
-public final class LeftRight256PaddedLong extends LeftRightLongPadded {
+public class LeftRight256PaddedLong extends LeftRightLongPadded {
     long l02, l03, l04, l05, l06, l07, l08;
     long l9, l10, l11, l12, l13, l14, l15, l16;
 
-    LeftRight256PaddedLong(long initialValue) {
+    public LeftRight256PaddedLong(long initialValue) {
         super(initialValue);
     }
 }

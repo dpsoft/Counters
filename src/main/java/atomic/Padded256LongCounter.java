@@ -5,27 +5,30 @@ import minmaxcounters.Padded256LongMaxUpdater;
 import org.jctools.counters.Counter;
 import org.openjdk.jol.info.ClassLayout;
 
-public class Padded256LongCounter implements Counter {
-    private LeftRight256PaddedLong volatileLong = new LeftRight256PaddedLong(0L);
+public class Padded256LongCounter extends LeftRight256PaddedLong implements Counter {
+
+    public Padded256LongCounter(long initialValue) {
+        super(initialValue);
+    }
 
     @Override
     public void increment() {
-        volatileLong.getAndAdd(1L);
+        getAndAdd(1L);
     }
 
     @Override
     public void increment(long delta) {
-        volatileLong.getAndAdd(delta);
+        getAndAdd(delta);
     }
 
     @Override
     public long get() {
-        return volatileLong.volatileGet();
+        return volatileGet();
     }
 
     @Override
     public long getAndReset() {
-        return volatileLong.getAndSet(0L);
+        return getAndSet(0L);
     }
 
     public static void main(String... str) {
