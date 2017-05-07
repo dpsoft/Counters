@@ -12,7 +12,7 @@ model name      : Intel(R) Core(TM) i5-6300U CPU @ 2.40GHz
 
 [info] # VM version: JDK 1.8.0_121, VM 25.121-b13
 
-//only throughtput
+//only throughput
 jmh:run ".*.Counter.*" -bm avgt -tg 0,4
 
 [info] # Threads: 4 threads (1 group; 0x "get", 4x "increment" in each group), will synchronize iterations
@@ -110,7 +110,7 @@ jmh:run ".*.Counter.*" -bm avgt -tg 1,11
 
 ### MaxUpdaters
 ```text
-//only for throughtput
+//only for throughput
 jmh:run ".*.Updater.*" -bm avgt -tg 0,4
 
 [info] # Threads: 4 threads (1 group; 0x "max", 4x "update" in each group), will synchronize iterations

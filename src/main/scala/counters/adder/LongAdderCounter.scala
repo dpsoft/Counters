@@ -10,5 +10,16 @@ class LongAdderCounter extends Counter {
   override def increment(): Unit = counter.increment()
   override def get(): Long = counter.sum()
   override def increment(delta: Long): Unit = counter.add(delta)
-  override def getAndReset(): Long = getAndReset()
+  override def getAndReset(): Long = counter.sumThenReset()
 }
+
+
+class CustomLongAdderCounter extends Counter {
+  val counter = new jsr.custom.LongAdder()
+
+  override def increment(): Unit = counter.increment()
+  override def get(): Long = counter.sum()
+  override def increment(delta: Long): Unit = counter.add(delta)
+  override def getAndReset(): Long = counter.sumAndReset()
+}
+
