@@ -1,6 +1,6 @@
 # WIP #
 
-### Some partials results
+### Some partial results
 
 ### Counters
 
